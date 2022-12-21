@@ -13,9 +13,11 @@ import (
  */
 
 var (
-	log      *logrus.Logger
-	uniqueId string
-	extra    map[string]interface{}
+	log         *logrus.Logger
+	uniqueId    string
+	extra       map[string]interface{}
+	defLogPath  = "/tmp/logs/"
+	defMaxRolls = 5
 )
 
 const (
@@ -28,14 +30,15 @@ const (
 )
 
 const (
-	typeField  = "log_type"
-	defLogPath = "/tmp/logs/"
+	typeField = "log_type"
+
 	defLogFile = "default.log"
 )
 
 const (
-	defMaxRolls    = 5               // log file roll
 	envLogToFile   = "LOG_TO_FILE"   // write log to file
+	envLogPath     = "LOG_PATH"      // log to file path
+	envLogRoll     = "LOG_ROLL"      // log to file path
 	envLogEsServer = "LOG_ES_SERVER" // log server
 	envServiceName = "SERVICE_NAME"  // service name
 	envEnv         = "ENV"           // env

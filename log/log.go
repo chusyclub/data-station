@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -51,6 +52,11 @@ func init() {
 		log.AddHook(NewEsLogHook(server))
 	}
 
+	// set default roll number
+	if roll := os.Getenv(envLogRoll); roll != "" {
+		defMaxRolls, _ = strconv.Atoi(roll)
+	}
+
 	// add line hook
 	log.AddHook(NewLineHook(isDev))
 
@@ -86,7 +92,7 @@ func Init(serviceName, logDBUrl string) error {
 
 		// write to file
 		if file := os.Getenv(envLogToFile); file != "" {
-			logFilename := getLogFilename(serviceName)
+			logFilename := getLogFilename(svcName)
 			if path := filepath.Dir(logFilename); !isDirExists(path) {
 				if err := os.MkdirAll(path, 0744); err != nil {
 					log.Errorf("Mkdirall %s err: %v", path, err)
@@ -243,6 +249,9 @@ func isDirExists(path string) bool {
 }
 
 func getLogFilename(serviceName string) string {
+	if path := os.Getenv(envLogPath); path != "" {
+		defLogPath = envLogPath
+	}
 	var logFilename string
 	logFilename = defLogPath + serviceName + "/" + defLogFile
 
