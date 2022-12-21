@@ -1,7 +1,6 @@
 package log
 
 import (
-	"fmt"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
@@ -250,7 +249,7 @@ func isDirExists(path string) bool {
 
 func getLogFilename(serviceName string) string {
 	if path := os.Getenv(envLogPath); path != "" {
-		defLogPath = envLogPath
+		defLogPath = os.Getenv(envLogPath)
 	}
 	var logFilename string
 	logFilename = defLogPath + serviceName + "/" + defLogFile
@@ -264,6 +263,5 @@ func getLogFilename(serviceName string) string {
 			log.Errorf("Mkdirall %s err: %v", path, err)
 		}
 	}
-	fmt.Println("logFilename==", logFilename)
 	return logFilename
 }
