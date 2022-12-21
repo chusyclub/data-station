@@ -2,7 +2,7 @@ package log
 
 import (
 	"fmt"
-	"github.com/data-station/mysql"
+	"github.com/chusyclub/data-station/mysql"
 	"github.com/sirupsen/logrus"
 	"time"
 )
