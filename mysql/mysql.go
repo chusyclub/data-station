@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	"sync"
 	"time"
+	"xorm.io/xorm"
 )
 
 /**
