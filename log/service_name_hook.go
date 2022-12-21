@@ -1,7 +1,6 @@
 package log
 
 import (
-	"fmt"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,7 +17,6 @@ type ServiceHook struct {
 }
 
 func NewAppHook(serviceName string) *ServiceHook {
-	fmt.Println("初始化service name hook...")
 	return &ServiceHook{
 		ServiceName: serviceName,
 	}

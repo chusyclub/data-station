@@ -1,14 +1,14 @@
 package log
 
 import (
+	"fmt"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rs/xid"
+	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
-
-	"github.com/rs/xid"
-	"github.com/sirupsen/logrus"
 )
 
 /**
@@ -58,33 +58,6 @@ func init() {
 		"command": os.Args[0],
 	})
 
-	// set log level
-	if lvl, err := logrus.ParseLevel(envLogLevel); err == nil {
-		log.SetLevel(lvl)
-	} else {
-		if isDev {
-			log.SetLevel(DebugLevel)
-		} else {
-			log.SetLevel(InfoLevel)
-		}
-	}
-	// write to file
-	if file := os.Getenv(envLogToFile); file != "" {
-		logFilename := getLogFilename()
-		if path := filepath.Dir(logFilename); !isDirExists(path) {
-			if err := os.MkdirAll(path, 0744); err != nil {
-				log.Errorf("Mkdirall %s err: %v", path, err)
-			}
-		}
-		rotateLog, _ := rotatelogs.New(
-			logFilename+".%Y%m%d",
-			rotatelogs.WithLinkName(logFilename),
-			rotatelogs.WithMaxAge(24*time.Duration(defMaxRolls)*time.Hour),
-			rotatelogs.WithRotationTime(24*time.Hour),
-		)
-		log.Out = rotateLog
-	}
-
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -101,6 +74,7 @@ func Init(serviceName, logDBUrl string) error {
 	}
 	// add service name hook
 	if svcName != "" {
+		log.Infof("[%s] start...", serviceName)
 		log.AddHook(NewAppHook(svcName))
 		if logDBUrl != "" {
 			// add log to db hook
@@ -108,6 +82,23 @@ func Init(serviceName, logDBUrl string) error {
 			go mysqlHook.writeToDb()
 			log.AddHook(mysqlHook)
 
+		}
+
+		// write to file
+		if file := os.Getenv(envLogToFile); file != "" {
+			logFilename := getLogFilename(serviceName)
+			if path := filepath.Dir(logFilename); !isDirExists(path) {
+				if err := os.MkdirAll(path, 0744); err != nil {
+					log.Errorf("Mkdirall %s err: %v", path, err)
+				}
+			}
+			rotateLog, _ := rotatelogs.New(
+				logFilename+".%Y%m%d",
+				rotatelogs.WithLinkName(logFilename),
+				rotatelogs.WithMaxAge(24*time.Duration(defMaxRolls)*time.Hour),
+				rotatelogs.WithRotationTime(24*time.Hour),
+			)
+			log.Out = rotateLog
 		}
 	}
 
@@ -251,17 +242,9 @@ func isDirExists(path string) bool {
 	}
 }
 
-func getLogFilename(filename ...string) string {
-	var serviceName, logFilename string
-
-	if len(filename) == 0 {
-		if serviceName = os.Getenv(envServiceName); serviceName == "" {
-			serviceName = "undefined"
-		}
-		logFilename = defLogPath + "_" + serviceName + "/" + defLogFile
-	} else {
-		logFilename = filename[0]
-	}
+func getLogFilename(serviceName string) string {
+	var logFilename string
+	logFilename = defLogPath + serviceName + "/" + defLogFile
 
 	if !filepath.IsAbs(logFilename) {
 		logFilename, _ = filepath.Abs(logFilename)
@@ -272,6 +255,6 @@ func getLogFilename(filename ...string) string {
 			log.Errorf("Mkdirall %s err: %v", path, err)
 		}
 	}
-
+	fmt.Println("logFilename==", logFilename)
 	return logFilename
 }

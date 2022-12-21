@@ -29,15 +29,13 @@ const (
 
 const (
 	typeField  = "log_type"
-	defLogPath = "/data/logs/"
+	defLogPath = "/tmp/logs/"
 	defLogFile = "default.log"
 )
 
 const (
 	defMaxRolls    = 5               // log file roll
-	envLogLevel    = "LOG_LEVEL"     // log level
 	envLogToFile   = "LOG_TO_FILE"   // write log to file
-	envLogToDB     = "LOG_TO_DB"     // write log to file
 	envLogEsServer = "LOG_ES_SERVER" // log server
 	envServiceName = "SERVICE_NAME"  // service name
 	envEnv         = "ENV"           // env
