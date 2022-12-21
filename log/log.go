@@ -22,16 +22,6 @@ import (
 func init() {
 	log = logrus.New()
 
-	// set log formatter
-	formatter := new(logrus.TextFormatter)
-	formatter.TimestampFormat = "2006-01-02 15:04:05"
-	formatter.FieldMap = logrus.FieldMap{
-		logrus.FieldKeyTime:  "[T]",
-		logrus.FieldKeyLevel: "[L]",
-		logrus.FieldKeyMsg:   "[Msg]",
-	}
-	log.SetFormatter(formatter)
-
 	var isDev bool
 	switch strings.ToLower(os.Getenv(envEnv)) {
 	case envDev:
@@ -79,7 +69,7 @@ func Init(serviceName, logDBUrl string) error {
 	}
 	// add service name hook
 	if svcName != "" {
-		log.Infof("[%s] start...", serviceName)
+		log.Infof("[%s] start...", svcName)
 		log.AddHook(NewAppHook(svcName))
 		if logDBUrl != "" {
 			// add log to db hook
@@ -105,6 +95,17 @@ func Init(serviceName, logDBUrl string) error {
 			)
 			log.Out = rotateLog
 		}
+
+		// set log formatter
+		formatter := new(logrus.TextFormatter)
+		formatter.TimestampFormat = "2006-01-02 15:04:05"
+		formatter.FieldMap = logrus.FieldMap{
+			logrus.FieldKeyTime:  "[T]",
+			logrus.FieldKeyLevel: "[L]",
+			logrus.FieldKeyMsg:   "[Msg]",
+		}
+		log.SetFormatter(formatter)
+
 	}
 
 	return nil
