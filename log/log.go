@@ -4,6 +4,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -93,20 +94,19 @@ func Init(serviceName, logDBUrl string) error {
 				rotatelogs.WithMaxAge(24*time.Duration(defMaxRolls)*time.Hour),
 				rotatelogs.WithRotationTime(24*time.Hour),
 			)
-			log.Out = rotateLog
+			fileAndStdoutWriter := io.MultiWriter(os.Stdout, rotateLog)
+			log.SetOutput(fileAndStdoutWriter)
 		}
-
-		// set log formatter
-		formatter := new(logrus.TextFormatter)
-		formatter.TimestampFormat = "2006-01-02 15:04:05"
-		formatter.FieldMap = logrus.FieldMap{
-			logrus.FieldKeyTime:  "[T]",
-			logrus.FieldKeyLevel: "[L]",
-			logrus.FieldKeyMsg:   "[Msg]",
-		}
-		log.SetFormatter(formatter)
-
 	}
+	// set log formatter
+	formatter := new(logrus.TextFormatter)
+	formatter.TimestampFormat = "2006-01-02 15:04:05"
+	formatter.FieldMap = logrus.FieldMap{
+		logrus.FieldKeyTime:  "[T]",
+		logrus.FieldKeyLevel: "[L]",
+		logrus.FieldKeyMsg:   "[Msg]",
+	}
+	log.SetFormatter(formatter)
 
 	return nil
 }
