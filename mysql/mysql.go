@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 	"xorm.io/xorm"
+	"xorm.io/xorm/log"
 )
 
 /**
@@ -60,7 +61,8 @@ func GetOrmEngine(url string) (*xorm.Engine, error) {
 
 	location, _ := time.LoadLocation("Asia/Shanghai")
 	engine.DatabaseTZ = location
-	engine.ShowSQL(true)
+	engine.ShowSQL(false)
+	engine.Logger().SetLevel(log.LOG_ERR)
 
 	err = engine.Ping()
 
