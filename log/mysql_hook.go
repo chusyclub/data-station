@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/chusyclub/data-station/mysql"
 	"github.com/sirupsen/logrus"
+	"strings"
 	"time"
 )
 
@@ -38,7 +39,7 @@ func (h *MySQLHook) Levels() []logrus.Level {
 func (h *MySQLHook) Fire(entry *logrus.Entry) error {
 	log := SysLog{
 		Project:  h.SvcName,
-		Level:    entry.Level.String(),
+		Level:    strings.ToUpper(entry.Level.String()),
 		DataTs:   time.Now().UnixMilli(),
 		DataTime: getCurrTimeStr(),
 		Content:  entry.Message,
