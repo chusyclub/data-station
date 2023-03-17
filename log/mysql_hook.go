@@ -1,6 +1,7 @@
 package log
 
 import (
+	"data-station/util"
 	"fmt"
 	"github.com/chusyclub/data-station/mysql"
 	"github.com/sirupsen/logrus"
@@ -28,10 +29,9 @@ func NewMySQLHook(url, svcName string) *MySQLHook {
 		SvcName:    svcName,
 		SysLogChan: make(chan SysLog, 100),
 	}
-
 	return hook
-
 }
+
 func (h *MySQLHook) Levels() []logrus.Level {
 	return logrus.AllLevels
 }
@@ -41,7 +41,7 @@ func (h *MySQLHook) Fire(entry *logrus.Entry) error {
 		Project:  h.SvcName,
 		Level:    strings.ToUpper(entry.Level.String()),
 		DataTs:   time.Now().UnixMilli(),
-		DataTime: getCurrTimeStr(),
+		DataTime: util.GetCurrTimeStr(),
 		Content:  entry.Message,
 	}
 	h.SysLogChan <- log
@@ -62,8 +62,4 @@ func (h *MySQLHook) writeToDb() {
 		}
 	}
 
-}
-
-func getCurrTimeStr() string {
-	return time.Now().Format("2006-01-02 15:04:05")
 }

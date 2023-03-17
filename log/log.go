@@ -1,12 +1,14 @@
 package log
 
 import (
+	"data-station/config"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -15,7 +17,7 @@ import (
 /**
  * @Author: chushiyang
  * @Description: log util
- * @File:  log.go
+ * @File:  log1.go
  * @Version: 1.0.0
  * @Date: 2022/12/20 14:40
  */
@@ -58,7 +60,13 @@ func init() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-func Init(serviceName, logDBUrl string) error {
+func Init(serviceName string, config config.Configure) error {
+	// 配置格式：// Config --> DB -- > QuantMainURL
+	logDBUrl := getDbUrl(config)
+
+	// 配置格式：// Config --> DingDing -- > DingDingConf
+	dingFlag, dingURL, dingType, Ats := getDingUrl(config)
+
 	// add service name hook
 	svcName := ""
 	if serviceName == "" {
@@ -78,6 +86,11 @@ func Init(serviceName, logDBUrl string) error {
 			go mysqlHook.writeToDb()
 			log.AddHook(mysqlHook)
 
+		}
+		if dingFlag != "" && dingURL != "" {
+			// send error log to ding ding message
+			dingHook := NewDingHook(serviceName, dingFlag, dingURL, dingType, Ats)
+			log.AddHook(dingHook)
 		}
 
 		// write to file
@@ -109,6 +122,44 @@ func Init(serviceName, logDBUrl string) error {
 	log.SetFormatter(formatter)
 
 	return nil
+}
+
+// Config --> DB -- > QuantMainURL
+func getDbUrl(cfg config.Configure) string {
+	cfgReflect := reflect.ValueOf(cfg)
+	db := cfgReflect.FieldByName("DB")
+	if !db.IsNil() {
+		quantMainURL := db.Elem().FieldByName("QuantMainURL")
+		if quantMainURL.IsValid() {
+			return quantMainURL.String()
+		}
+	}
+	return ""
+}
+
+// Config --> DingDing -- > DingDingConf
+func getDingUrl(cfg config.Configure) (DingFlag string, DingTalkUrl string, DingType string, Ats []string) {
+	cfgReflect := reflect.ValueOf(cfg)
+	ding := cfgReflect.FieldByName("DingDing")
+	if !ding.IsNil() {
+		dingFlag := ding.Elem().FieldByName("DingFlag")
+		if dingFlag.IsValid() {
+			DingFlag = dingFlag.String()
+		}
+		dingTalkUrl := ding.Elem().FieldByName("DingTalkUrl")
+		if dingTalkUrl.IsValid() {
+			DingTalkUrl = dingTalkUrl.String()
+		}
+		dingType := ding.Elem().FieldByName("DingType")
+		if dingType.IsValid() {
+			DingType = dingType.String()
+		}
+		ats := ding.Elem().FieldByName("Ats")
+		if ats.IsValid() {
+			Ats = ats.Interface().([]string)
+		}
+	}
+	return
 }
 
 func SetLevel(level logrus.Level) {
