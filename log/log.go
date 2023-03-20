@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/data-station/config"
+	"github.com/chusyclub/data-station/config"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rs/xid"
 	"github.com/sirupsen/logrus"
