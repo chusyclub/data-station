@@ -1,9 +1,9 @@
 package log
 
 import (
-	"data-station/util"
 	"fmt"
 	"github.com/chusyclub/data-station/mysql"
+	"github.com/chusyclub/data-station/util"
 	"github.com/sirupsen/logrus"
 	"strings"
 	"time"
@@ -11,7 +11,7 @@ import (
 
 /**
  * @Author: chushiyang
- * @Description:
+ * @Description:s
  * @File:  mysql_hook
  * @Version: 1.0.0
  * @Date: 2022/12/20 17:13

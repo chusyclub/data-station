@@ -1,8 +1,8 @@
 package log
 
 import (
-	"data-station/util"
 	"fmt"
+	"github.com/chusyclub/data-station/util"
 	"github.com/sirupsen/logrus"
 	"strings"
 )
