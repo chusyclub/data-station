@@ -60,6 +60,9 @@ func init() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+func GetLog() {
+
+}
 func Init(serviceName string, config config.Configure) error {
 	// 配置格式：// Config --> DB -- > QuantMainURL
 	logDBUrl := getDbUrl(config)
