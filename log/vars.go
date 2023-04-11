@@ -13,11 +13,14 @@ import (
  */
 
 var (
-	log         *logrus.Logger
-	uniqueId    string
-	extra       map[string]interface{}
-	defLogPath  = "/tmp/logs/"
-	defMaxRolls = 5
+	log           *logrus.Logger
+	uniqueId      string
+	extra         map[string]interface{}
+	defLogPath    = "/tmp/logs/"
+	defMaxRolls   = 5
+	FlagTrade     = "[quant-trade]"
+	LogTypeCommon = 1 // 普通类型
+	LogTypeTrade  = 2 // 交易类型
 )
 
 const (
@@ -55,6 +58,7 @@ type SysLog struct {
 	DataTs   int64  `json:"data_ts"`
 	DataTime string `json:"data_time"`
 	Content  string `json:"content"`
+	Type     int    `json:"type"` //类别 1.普通，2.交易日志
 }
 
 func (d SysLog) TableName() string {

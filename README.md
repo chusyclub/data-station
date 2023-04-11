@@ -18,5 +18,5 @@ QuantMainURL="user:password@(ip:port)/dbname?timeout=5s&readTimeout=5s&writeTime
 3. main.go中添加
 ```
 // 在初始化config以后调用，传入config对象
-log.Init("项目名", config.Conf)
+log.Init("项目名", *config.Conf)
 ```

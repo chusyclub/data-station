@@ -37,12 +37,18 @@ func (h *MySQLHook) Levels() []logrus.Level {
 }
 
 func (h *MySQLHook) Fire(entry *logrus.Entry) error {
+	content := entry.Message
+	logType := LogTypeCommon
+	if strings.HasPrefix(content, FlagTrade) {
+		logType = LogTypeTrade
+	}
 	log := SysLog{
 		Project:  h.SvcName,
 		Level:    strings.ToUpper(entry.Level.String()),
 		DataTs:   time.Now().UnixMilli(),
 		DataTime: util.GetCurrTimeStr(),
 		Content:  entry.Message,
+		Type:     logType,
 	}
 	h.SysLogChan <- log
 	return nil

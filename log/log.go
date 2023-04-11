@@ -1,10 +1,6 @@
 package log
 
 import (
-	"github.com/chusyclub/data-station/config"
-	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
-	"github.com/rs/xid"
-	"github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"path/filepath"
@@ -12,6 +8,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/chusyclub/data-station/config"
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rs/xid"
+	"github.com/sirupsen/logrus"
 )
 
 /**
@@ -60,9 +61,8 @@ func init() {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-func GetLog() {
+// TODO 添加defer 错误捕获
 
-}
 func Init(serviceName string, config config.Configure) error {
 	// 配置格式：// Config --> DB -- > QuantMainURL
 	logDBUrl := getDbUrl(config)
