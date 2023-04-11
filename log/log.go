@@ -129,6 +129,11 @@ func Init(serviceName string, config config.Configure) error {
 
 // Config --> DB -- > QuantMainURL
 func getDbUrl(cfg config.Configure) string {
+	defer func() {
+		if p := recover(); p != nil {
+			log.Error("get db url error:", p)
+		}
+	}()
 	cfgReflect := reflect.ValueOf(cfg)
 	db := cfgReflect.FieldByName("DB")
 	if !db.IsNil() {
@@ -142,6 +147,11 @@ func getDbUrl(cfg config.Configure) string {
 
 // Config --> DingDing -- > DingDingConf
 func getDingUrl(cfg config.Configure) (DingFlag string, DingTalkUrl string, DingType string, Ats []string) {
+	defer func() {
+		if p := recover(); p != nil {
+			log.Error("get ding talk url error:", p)
+		}
+	}()
 	cfgReflect := reflect.ValueOf(cfg)
 	ding := cfgReflect.FieldByName("DingDing")
 	if !ding.IsNil() {
