@@ -132,6 +132,7 @@ func getDbUrl(cfg config.Configure) string {
 	defer func() {
 		if p := recover(); p != nil {
 			log.Error("get db url error:", p)
+			return
 		}
 	}()
 	cfgReflect := reflect.ValueOf(cfg)
@@ -150,6 +151,7 @@ func getDingUrl(cfg config.Configure) (DingFlag string, DingTalkUrl string, Ding
 	defer func() {
 		if p := recover(); p != nil {
 			log.Error("get ding talk url error:", p)
+			return
 		}
 	}()
 	cfgReflect := reflect.ValueOf(cfg)
