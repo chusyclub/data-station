@@ -191,7 +191,7 @@ func RefreshUniqueId() {
 }
 
 func Type(typ string) *logrus.Entry {
-	return log.WithField(typeField, typ)
+	return log.WithField(LogTypeField, typ)
 }
 
 func With(pairs ...string) *logrus.Entry {
@@ -203,7 +203,7 @@ func With(pairs ...string) *logrus.Entry {
 	for i := 0; i < len(pairs); i += 2 {
 		fields[pairs[i]] = pairs[i+1]
 		if pairs[i] == "type" {
-			fields[typeField] = pairs[i+1]
+			fields[LogTypeField] = pairs[i+1]
 		}
 	}
 
@@ -211,11 +211,11 @@ func With(pairs ...string) *logrus.Entry {
 }
 
 func WithField(key string, value interface{}, typ string) *logrus.Entry {
-	return log.WithField(typeField, typ).WithField(key, value)
+	return log.WithField(LogTypeField, typ).WithField(key, value)
 }
 
 func WithFields(fields logrus.Fields, typ string) *logrus.Entry {
-	fields[typeField] = typ
+	fields[LogTypeField] = typ
 	return log.WithFields(fields)
 }
 

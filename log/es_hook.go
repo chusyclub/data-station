@@ -47,7 +47,7 @@ func NewEsLogHook(server string) *EsLogHook {
 }
 
 func (hook *EsLogHook) Fire(entry *logrus.Entry) error {
-	_type := entry.Data[typeField]
+	_type := entry.Data[LogTypeField]
 	var typ string
 	if _type == nil {
 		typ = "default"
@@ -55,7 +55,7 @@ func (hook *EsLogHook) Fire(entry *logrus.Entry) error {
 		typ = _type.(string)
 	}
 
-	delete(entry.Data, typeField)
+	delete(entry.Data, LogTypeField)
 
 	msg := Message{
 		Index:    fmt.Sprintf("golog-%s-%s", typ, entry.Time.UTC().Format(DateFormat)),

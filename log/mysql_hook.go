@@ -39,8 +39,12 @@ func (h *MySQLHook) Levels() []logrus.Level {
 // TODO 待测试
 func (h *MySQLHook) Fire(entry *logrus.Entry) error {
 	logType := LogTypeCommon
-	if v, ok := entry.Data[typeField]; ok {
+	tradeId := ""
+	if v, ok := entry.Data[LogTypeField]; ok {
 		logType = v.(int)
+	}
+	if v, ok := entry.Data[TradeIdField]; ok {
+		tradeId = v.(string)
 	}
 	log := SysLog{
 		Project:  h.SvcName,
@@ -49,6 +53,7 @@ func (h *MySQLHook) Fire(entry *logrus.Entry) error {
 		DataTime: util.GetCurrTimeStr(),
 		Content:  entry.Message,
 		LogType:  logType,
+		TradeId:  tradeId,
 	}
 	h.SysLogChan <- log
 	return nil
