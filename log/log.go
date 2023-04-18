@@ -214,7 +214,7 @@ func WithField(key string, value interface{}, typ string) *logrus.Entry {
 	return log.WithField(LogTypeField, typ).WithField(key, value)
 }
 
-func WithFields(fields logrus.Fields, typ string) *logrus.Entry {
+func WithFields(fields logrus.Fields, typ int) *logrus.Entry {
 	fields[LogTypeField] = typ
 	return log.WithFields(fields)
 }
