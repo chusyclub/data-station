@@ -210,7 +210,7 @@ func With(pairs ...string) *logrus.Entry {
 	return log.WithFields(fields)
 }
 
-func WithField(key string, value interface{}, typ string) *logrus.Entry {
+func WithField(key string, value interface{}, typ int) *logrus.Entry {
 	return log.WithField(LogTypeField, typ).WithField(key, value)
 }
 
