@@ -58,7 +58,7 @@ type SysLog struct {
 	DataTs   int64  `json:"data_ts"`
 	DataTime string `json:"data_time"`
 	Content  string `json:"content"`
-	Type     int    `json:"type"` //类别 1.普通，2.交易日志
+	LogType  int    `json:"log_type"` //类别 1.普通，2.交易日志
 }
 
 func (d SysLog) TableName() string {
