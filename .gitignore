@@ -19,9 +19,3 @@ vendor/
 */.DS_Store
 
 *.out
-
-go.mod
-go.sum
-*/.go.mod
-*/.go.sum
-demos/
