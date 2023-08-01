@@ -36,15 +36,18 @@ func (h *MySQLHook) Levels() []logrus.Level {
 	return logrus.AllLevels
 }
 
-// TODO 待测试
 func (h *MySQLHook) Fire(entry *logrus.Entry) error {
 	logType := LogTypeCommon
 	tradeId := ""
+	var userId int64
 	if v, ok := entry.Data[LogTypeField]; ok {
 		logType = v.(int)
 	}
 	if v, ok := entry.Data[TradeIdField]; ok {
 		tradeId = v.(string)
+	}
+	if v, ok := entry.Data[UserIdField]; ok {
+		userId = v.(int64)
 	}
 	log := SysLog{
 		Project:  h.SvcName,
@@ -54,6 +57,7 @@ func (h *MySQLHook) Fire(entry *logrus.Entry) error {
 		Content:  entry.Message,
 		LogType:  logType,
 		TradeId:  tradeId,
+		UserId:   userId,
 	}
 	h.SysLogChan <- log
 	return nil

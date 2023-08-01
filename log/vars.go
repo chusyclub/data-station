@@ -35,6 +35,7 @@ const (
 const (
 	LogTypeField = "log_type"
 	TradeIdField = "trade_id"
+	UserIdField  = "user_id"
 
 	defLogFile = "default.log"
 )
@@ -61,6 +62,7 @@ type SysLog struct {
 	Content  string `json:"content"`
 	LogType  int    `json:"log_type"` // 类别 1.普通，2.交易日志
 	TradeId  string `json:"trade_id"` // 交易ID
+	UserId   int64  `json:"user_id"`  // 用户ID
 }
 
 func (d SysLog) TableName() string {
