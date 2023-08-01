@@ -1,3 +1,6 @@
+# 仅用于本人项目开发使用，请勿直接其他项目中引用，后果自负
+
+
 # data-station
 sdk内容为data-station项目使用
 
